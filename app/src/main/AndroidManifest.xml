@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.abhishek.catalogwithretro">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.genre.GenreActivity"
+            android:label="Genre Catalog"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.book.BookActivity"
+            android:label="Book Catalog" />
+        <activity
+            android:name=".activity.author.AuthorActivity"
+            android:label="Author Catalog"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.genre.AddNewGenreActivity"
+            android:configChanges="screenSize|orientation"
+            android:label="Add new Genre"
+            android:parentActivityName=".activity.genre.GenreActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.genre.GenreActivity" />
+        </activity>
+        <activity
+            android:name=".activity.genre.EditGenreActivity"
+            android:label="Edit genre" />
+        <activity
+            android:name=".activity.author.AddNewAuthorActivity"
+            android:label="Add new Author" />
+        <activity android:name=".activity.author.EditAuthorActivity" />
+        <activity
+            android:name=".activity.book.AddNewBookActivity"
+            android:label="Add new book" />
+        <activity android:name=".activity.book.EditBookActivity"></activity>
+    </application>
+
+</manifest>

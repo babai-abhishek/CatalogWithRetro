@@ -62,7 +62,7 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerClickLi
         recyclerView.setAdapter(adapter);
 
         if(savedInstanceState!=null){
-            authorList = Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_AUTHORS),(new Author[0]).getClass()));
+            authorList = (List<Author>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_AUTHORS),(new Author[0]).getClass()));
             shouldReloadOnResume = savedInstanceState.getBoolean(KEY_SHOULD_RELOAD_ON_RESUME);
             if(!shouldReloadOnResume){
                 adapter.setAuthors(authorList);

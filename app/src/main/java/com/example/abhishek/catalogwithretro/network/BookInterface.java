@@ -23,6 +23,15 @@ public interface BookInterface {
     @GET("/books")
     Call<List<Book>> getAllBooks();
 
+    @GET("/books/{id}")
+    Call<Book> getBook(@Path("id")String id);
+
+    @GET("/books/genre/{genreId}")
+    Call<List<Book>> getBooksByGenreId(@Path("genreId")String genreId);
+
+    @GET("/books/author/{authorId}")
+    Call<List<Book>> getBooksByAuthorId(@Path("authorId")String authorId);
+
     @POST("/books")
     Call<Book> newBookEntry(@Body Book book);
 

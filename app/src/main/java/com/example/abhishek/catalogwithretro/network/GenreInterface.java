@@ -22,6 +22,9 @@ public interface GenreInterface {
     @GET("/genres")
     Call<List<Genre>> getAllGenres();
 
+    @GET("/genres/{id}")
+    Call<Genre> getGenre(@Path("id")String id);
+
     @POST("/genres")
     Call<Genre> newGenreEntry(@Body Genre genre);
 

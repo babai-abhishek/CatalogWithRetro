@@ -34,19 +34,28 @@ public class Book {
     public Book() {
     }
 
-    /**
+    public Book(String name, String language, String published, int pages, String authorId, String genreId) {
+        this.name = name;
+        this.language = language;
+        this.published = published;
+        this.pages = pages;
+        this.authorId = authorId;
+        this.genreId = genreId;
+    }
+
+ /*   *//**
      *  @param name
      * @param language
      * @param published
      * @param pages
-     */
+     *//*
     public Book(String name, String language, String published, int pages) {
         super();
         this.name = name;
         this.language = language;
         this.published = published;
         this.pages = pages;
-    }
+    }*/
 
     public String getName() {
         return name;

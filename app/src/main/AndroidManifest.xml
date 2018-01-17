@@ -47,7 +47,9 @@
         <activity
             android:name=".activity.book.AddNewBookActivity"
             android:label="Add new book" />
-        <activity android:name=".activity.book.EditBookActivity"></activity>
+        <activity android:name=".activity.book.EditBookActivity" />
+        <activity android:name=".activity.book.GenreTypeSelection.Select_genre_type_activity" />
+        <activity android:name=".activity.book.AuthorNameSelection.Select_author_name_activity"></activity>
     </application>
 
 </manifest>

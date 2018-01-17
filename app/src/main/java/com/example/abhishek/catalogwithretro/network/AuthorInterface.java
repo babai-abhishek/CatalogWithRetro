@@ -23,6 +23,9 @@ public interface AuthorInterface {
     @GET("/authors")
     Call<List<Author>> getAllAuthors();
 
+    @GET("/authors/{id}")
+    Call<Author> getAuthor(@Path("id")String id);
+
     @POST("/authors")
     Call<Author> newAuthorEntry(@Body Author author);
 

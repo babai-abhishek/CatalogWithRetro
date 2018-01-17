@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Catalog</string>
+    <string name="spinner_genre">Select genre name</string>
+    <string name="spinner_author">Select author name</string>
 </resources>

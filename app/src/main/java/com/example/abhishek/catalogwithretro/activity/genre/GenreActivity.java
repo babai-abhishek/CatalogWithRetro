@@ -64,7 +64,7 @@ public class GenreActivity extends AppCompatActivity implements RecyclerClickLis
 
        // shouldReloadOnResume=false;
         if(savedInstanceState!=null){
-            genres = Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_GENRES), (new Genre[0]).getClass()));
+            genres = (List<Genre>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_GENRES), (new Genre[0]).getClass()));
             shouldReloadOnResume=savedInstanceState.getBoolean(KEY_SHOULD_RELOAD_ON_RESUME);
             if(!shouldReloadOnResume){
                 adapter.setGenres(genres);

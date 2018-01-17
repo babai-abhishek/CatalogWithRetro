@@ -45,8 +45,12 @@ public class EditBookActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Call<Book> call = bookService.updateBookEntry(getIntent().getStringExtra("bookId"),
-                        new Book(etBookName.getText().toString(),etBookLang.getText().toString(),
-                                etBookPublishDate.getText().toString(),Integer.parseInt(etBookPages.getText().toString())));
+                        new Book(etBookName.getText().toString(),
+                                etBookLang.getText().toString(),
+                                etBookPublishDate.getText().toString(),
+                                Integer.parseInt(etBookPages.getText().toString()),
+                                getIntent().getStringExtra("authId"),
+                                getIntent().getStringExtra("genreId")));
                 call.enqueue(new Callback<Book>() {
                     @Override
                     public void onResponse(Call<Book> call, Response<Book> response) {

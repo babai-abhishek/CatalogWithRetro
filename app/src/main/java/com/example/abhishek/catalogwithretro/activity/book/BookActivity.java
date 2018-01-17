@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class BookActivity extends AppCompatActivity implements RecyclerClickListener{
 
-    private static final String TAG = "BookActivity";
+    private static final String TAG = "#";
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
     private boolean shouldReloadOnResume = false;
     private List<Book> bookList;
@@ -61,7 +61,7 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
         recyclerView.setAdapter(adapter);
 
         if(savedInstanceState!=null){
-            bookList = Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_BOOKS), (new Book[0]).getClass()));
+            bookList = (List<Book>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_BOOKS), (new Book[0]).getClass()));
             shouldReloadOnResume=savedInstanceState.getBoolean(KEY_SHOULD_RELOAD_ON_RESUME);
             if(!shouldReloadOnResume){
                 adapter.setAdapter(bookList);
@@ -122,7 +122,9 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
                 intent.putExtra("bookId",book.getId());
                 intent.putExtra("bookLang",book.getLanguage());
                 intent.putExtra("bookPublishDate",book.getPublished());
-                intent.putExtra("bookPages",book.getPages());
+                intent.putExtra("bookPages",String.valueOf(book.getPages()));
+                intent.putExtra("authId",book.getAuthorId());
+                intent.putExtra("genreId",book.getGenreId());
                 startActivity(intent);
                 break;
             case BookAdapter.ACTION_DELETE:

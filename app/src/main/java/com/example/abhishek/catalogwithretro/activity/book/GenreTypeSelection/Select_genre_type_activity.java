@@ -11,16 +11,13 @@ import android.view.View;
 
 import com.example.abhishek.catalogwithretro.R;
 import com.example.abhishek.catalogwithretro.activity.book.AddNewBookActivity;
-import com.example.abhishek.catalogwithretro.activity.book.SelectionListener;
+import com.example.abhishek.catalogwithretro.activity.book.RecyclerClickListener;
 import com.example.abhishek.catalogwithretro.activity.genre.AddNewGenreActivity;
-import com.example.abhishek.catalogwithretro.adapters.GenreAdapter;
-import com.example.abhishek.catalogwithretro.adapters.RecyclerClickListener;
 import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
 import com.example.abhishek.catalogwithretro.network.GenreInterface;
 import com.google.gson.Gson;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Select_genre_type_activity extends AppCompatActivity implements
-        SelectionListener {
+        RecyclerClickListener {
 
     private RecyclerView recyclerView;
     List<Genre> genres = new ArrayList<>();
@@ -114,7 +111,7 @@ public class Select_genre_type_activity extends AppCompatActivity implements
     }
 
     @Override
-    public void onSelect(int position) {
+    public void onItemClick(int position) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("selectedGenreType", genres.get(position));

@@ -8,10 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.abhishek.catalogwithretro.R;
-import com.example.abhishek.catalogwithretro.activity.book.GenreTypeSelection.Select_genre_type_adapter;
-import com.example.abhishek.catalogwithretro.activity.book.SelectionListener;
+import com.example.abhishek.catalogwithretro.activity.book.RecyclerClickListener;
 import com.example.abhishek.catalogwithretro.model.Author;
-import com.example.abhishek.catalogwithretro.model.Genre;
 
 import java.util.List;
 
@@ -22,11 +20,11 @@ import java.util.List;
 public class Select_author_name_adapter extends RecyclerView.Adapter<Select_author_name_adapter.AuthorNameViewHolder>{
 
     private List<Author> authorList;
-    private SelectionListener selectionListener;
+    private RecyclerClickListener recyclerClickListener;
 
-    public Select_author_name_adapter(List<Author> list, SelectionListener selectionListener) {
+    public Select_author_name_adapter(List<Author> list, RecyclerClickListener recyclerClickListener) {
         this.authorList = list;
-        this.selectionListener = selectionListener;
+        this.recyclerClickListener = recyclerClickListener;
     }
 
     @Override
@@ -47,7 +45,7 @@ public class Select_author_name_adapter extends RecyclerView.Adapter<Select_auth
         holder.authorNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectionListener.onSelect(authorList.indexOf(author));
+                recyclerClickListener.onItemClick(authorList.indexOf(author));
             }
         });
     }

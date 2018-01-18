@@ -9,13 +9,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.abhishek.catalogwithretro.R;
-import com.example.abhishek.catalogwithretro.activity.author.AuthorActivity;
 import com.example.abhishek.catalogwithretro.adapters.GenreAdapter;
-import com.example.abhishek.catalogwithretro.adapters.RecyclerClickListener;
+import com.example.abhishek.catalogwithretro.adapters.RecyclerEditDeleteClickActionListener;
 import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
 import com.example.abhishek.catalogwithretro.network.GenreInterface;
@@ -30,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GenreActivity extends AppCompatActivity implements RecyclerClickListener{
+public class GenreActivity extends AppCompatActivity implements RecyclerEditDeleteClickActionListener {
     private static final String KEY_GENRES = "genres";
     private static final String KEY_SHOULD_RELOAD_ON_RESUME = "shouldLoadOnResume";
 

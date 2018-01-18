@@ -1,5 +1,6 @@
 package com.example.abhishek.catalogwithretro.activity.book;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,16 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.abhishek.catalogwithretro.R;
-import com.example.abhishek.catalogwithretro.activity.genre.AddNewGenreActivity;
-import com.example.abhishek.catalogwithretro.adapters.BookAdapter;
-import com.example.abhishek.catalogwithretro.adapters.RecyclerClickListener;
+import com.example.abhishek.catalogwithretro.adapters.BookListAdapter;
 import com.example.abhishek.catalogwithretro.model.Book;
-import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
 import com.example.abhishek.catalogwithretro.network.BookInterface;
 import com.google.gson.Gson;
@@ -27,22 +22,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookActivity extends AppCompatActivity implements RecyclerClickListener{
+public class BookActivity extends AppCompatActivity implements RecyclerClickListener {
 
     private static final String TAG = "#";
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
     private boolean shouldReloadOnResume = false;
     private List<Book> bookList;
-    private BookAdapter adapter;
+    //private BookDetailsAdapter adapter;
+    private BookListAdapter bookListAdapter;
     private RecyclerView recyclerView;
 
     private static final String KEY_BOOKS = "books";
     private static final String KEY_SHOULD_RELOAD_ON_RESUME = "shouldLoadOnResume";
+    public static final String SELECTED_BOOK = "selectedBook";
+
+    /*ProgressDialog mProgressDialog;*/
 
 
 
@@ -51,20 +49,25 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
 
+       /* mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+*/
         recyclerView = (RecyclerView) findViewById(R.id.book_recycler_view);
         bookList = new ArrayList<>();
-        adapter = new BookAdapter(bookList, this);
+        bookListAdapter = new BookListAdapter(bookList, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(bookListAdapter);
 
         if(savedInstanceState!=null){
             bookList = (List<Book>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_BOOKS), (new Book[0]).getClass()));
             shouldReloadOnResume=savedInstanceState.getBoolean(KEY_SHOULD_RELOAD_ON_RESUME);
             if(!shouldReloadOnResume){
-                adapter.setAdapter(bookList);
+                bookListAdapter.setAdapter(bookList);
             }
 
         } else {
@@ -110,12 +113,12 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public void onAction(int position, int action) {
 
         Book book = bookList.get(position);
         switch (action){
-            case BookAdapter.ACTION_EDIT:
+            case BookDetailsAdapter.ACTION_EDIT:
                 shouldReloadOnResume=true;
                 Intent intent = new Intent(BookActivity.this, EditBookActivity.class);
                 intent.putExtra("bookName",book.getName());
@@ -127,7 +130,7 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
                 intent.putExtra("genreId",book.getGenreId());
                 startActivity(intent);
                 break;
-            case BookAdapter.ACTION_DELETE:
+            case BookDetailsAdapter.ACTION_DELETE:
                 Call<ResponseBody> call = bookService.deleteBookEntry(book.getId());
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -145,9 +148,13 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
                 break;
         }
 
-    }
+    }*/
 
     private void loadBooks(){
+
+       /* mProgressDialog.setMessage("Downloading all books");
+        mProgressDialog.show();
+*/
 
         Call<List<Book>> call = bookService.getAllBooks();
         call.enqueue(new Callback<List<Book>>() {
@@ -155,16 +162,25 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                 bookList = response.body();
                 Log.d(TAG," no of books received "+ bookList.size());
-                adapter.setAdapter(bookList);
+                bookListAdapter.setAdapter(bookList);
+                /*mProgressDialog.cancel();*/
             }
 
             @Override
             public void onFailure(Call<List<Book>> call, Throwable t) {
                 Log.e(TAG,t.toString());
+               /* mProgressDialog.cancel();*/
             }
         });
 
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent = new Intent(this, BookDetailsActivity.class);
+        intent.putExtra(SELECTED_BOOK,bookList.get(position));
+        startActivity(intent);
     }
 }
 

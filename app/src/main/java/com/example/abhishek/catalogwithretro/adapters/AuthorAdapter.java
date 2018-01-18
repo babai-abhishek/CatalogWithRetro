@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.abhishek.catalogwithretro.R;
 import com.example.abhishek.catalogwithretro.model.Author;
-import com.example.abhishek.catalogwithretro.model.Genre;
 
 import java.util.List;
 
@@ -21,14 +20,14 @@ import java.util.List;
 public class AuthorAdapter extends RecyclerView.Adapter<AuthorAdapter.AuthorViewHolder>{
 
     private List<Author> authorList;
-    private RecyclerClickListener recyclerClickListener;
+    private RecyclerEditDeleteClickActionListener recyclerEditDeleteClickActionListener;
     public static final int ACTION_EDIT=0;
     public static final int ACTION_DELETE=1;
 
 
-    public AuthorAdapter(List<Author> authorListlist, RecyclerClickListener recyclerClickListener) {
+    public AuthorAdapter(List<Author> authorListlist, RecyclerEditDeleteClickActionListener recyclerEditDeleteClickActionListener) {
         this.authorList = authorListlist;
-        this.recyclerClickListener = recyclerClickListener;
+        this.recyclerEditDeleteClickActionListener = recyclerEditDeleteClickActionListener;
     }
 
     @Override
@@ -49,13 +48,13 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorAdapter.AuthorView
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerClickListener.onAction(authorList.indexOf(author),ACTION_EDIT);
+                recyclerEditDeleteClickActionListener.onAction(authorList.indexOf(author),ACTION_EDIT);
             }
         });
         holder.btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerClickListener.onAction(authorList.indexOf(author),ACTION_DELETE);
+                recyclerEditDeleteClickActionListener.onAction(authorList.indexOf(author),ACTION_DELETE);
             }
         });
 

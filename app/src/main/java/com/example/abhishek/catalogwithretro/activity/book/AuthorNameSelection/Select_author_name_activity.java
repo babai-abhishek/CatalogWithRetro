@@ -12,15 +12,10 @@ import android.view.View;
 import com.example.abhishek.catalogwithretro.R;
 import com.example.abhishek.catalogwithretro.activity.author.AddNewAuthorActivity;
 import com.example.abhishek.catalogwithretro.activity.book.AddNewBookActivity;
-import com.example.abhishek.catalogwithretro.activity.book.GenreTypeSelection.Select_genre_type_activity;
-import com.example.abhishek.catalogwithretro.activity.book.GenreTypeSelection.Select_genre_type_adapter;
-import com.example.abhishek.catalogwithretro.activity.book.SelectionListener;
-import com.example.abhishek.catalogwithretro.activity.genre.AddNewGenreActivity;
+import com.example.abhishek.catalogwithretro.activity.book.RecyclerClickListener;
 import com.example.abhishek.catalogwithretro.model.Author;
-import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
 import com.example.abhishek.catalogwithretro.network.AuthorInterface;
-import com.example.abhishek.catalogwithretro.network.GenreInterface;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -32,7 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Select_author_name_activity extends AppCompatActivity
-                implements SelectionListener{
+                implements RecyclerClickListener {
 
     private RecyclerView recyclerView;
     List<Author> authors;
@@ -118,7 +113,7 @@ public class Select_author_name_activity extends AppCompatActivity
     }
 
     @Override
-    public void onSelect(int position) {
+    public void onItemClick(int position) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putSerializable("selectedAuthorName", authors.get(position));

@@ -31,12 +31,12 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
 
     private final OnItemClickListener listener;*/
 
-    private RecyclerClickListener recyclerClickListener;
+    private RecyclerEditDeleteClickActionListener recyclerEditDeleteClickActionListener;
 
-    public GenreAdapter(List<Genre> list, RecyclerClickListener recyclerClickListener) {
+    public GenreAdapter(List<Genre> list, RecyclerEditDeleteClickActionListener recyclerEditDeleteClickActionListener) {
         this.genreList = list;
        // this.context = context;
-        this.recyclerClickListener = recyclerClickListener;
+        this.recyclerEditDeleteClickActionListener = recyclerEditDeleteClickActionListener;
     }
 
     @Override
@@ -57,19 +57,19 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
         holder.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerClickListener.onAction(genreList.indexOf(genre),ACTION_EDIT);
+                recyclerEditDeleteClickActionListener.onAction(genreList.indexOf(genre),ACTION_EDIT);
             }
         });
         holder.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                recyclerClickListener.onAction(genreList.indexOf(genre), ACTION_DELETE);
+                recyclerEditDeleteClickActionListener.onAction(genreList.indexOf(genre), ACTION_DELETE);
             }
         });
         holder.genreNameTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                recyclerClickListener.onAction(genreList.indexOf(genre), ACTION_NAME_LONG_PRESS);
+                recyclerEditDeleteClickActionListener.onAction(genreList.indexOf(genre), ACTION_NAME_LONG_PRESS);
                 return true;
             }
         });

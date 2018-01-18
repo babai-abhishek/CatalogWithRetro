@@ -49,7 +49,10 @@
             android:label="Add new book" />
         <activity android:name=".activity.book.EditBookActivity" />
         <activity android:name=".activity.book.GenreTypeSelection.Select_genre_type_activity" />
-        <activity android:name=".activity.book.AuthorNameSelection.Select_author_name_activity"></activity>
+        <activity android:name=".activity.book.AuthorNameSelection.Select_author_name_activity" />
+        <activity android:name=".activity.book.BookDetailsActivity" />
+        <activity android:name=".activity.book.SortedBooksByAuthorActivity" />
+        <activity android:name=".activity.book.SortedBooksByGenreActivity"></activity>
     </application>
 
 </manifest>

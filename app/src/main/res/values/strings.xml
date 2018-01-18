@@ -2,4 +2,6 @@
     <string name="app_name">Catalog</string>
     <string name="spinner_genre">Select genre name</string>
     <string name="spinner_author">Select author name</string>
+    <string name="get_all_books_of_this_genre"><u>Get all books of this Genre?</u></string>
+    <string name="get_all_books_of_this_author"><u>Get all books of this Author?</u></string>
 </resources>

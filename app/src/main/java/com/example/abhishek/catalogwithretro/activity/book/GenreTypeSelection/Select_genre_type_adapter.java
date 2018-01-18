@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.abhishek.catalogwithretro.R;
-import com.example.abhishek.catalogwithretro.activity.book.SelectionListener;
+import com.example.abhishek.catalogwithretro.activity.book.RecyclerClickListener;
 import com.example.abhishek.catalogwithretro.model.Genre;
 
 import java.util.List;
@@ -20,11 +20,11 @@ import java.util.List;
 public class Select_genre_type_adapter extends RecyclerView.Adapter<Select_genre_type_adapter.GenreTypeViewHolder> {
 
     private List<Genre> genreList;
-    private SelectionListener selectionListener;
+    private RecyclerClickListener recyclerClickListener;
 
-    public Select_genre_type_adapter(List<Genre> list, SelectionListener selectionListener) {
+    public Select_genre_type_adapter(List<Genre> list, RecyclerClickListener recyclerClickListener) {
         this.genreList = list;
-        this.selectionListener = selectionListener;
+        this.recyclerClickListener = recyclerClickListener;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Select_genre_type_adapter extends RecyclerView.Adapter<Select_genre
         holder.genreTypeTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectionListener.onSelect(genreList.indexOf(genre));
+                recyclerClickListener.onItemClick(genreList.indexOf(genre));
             }
         });
     }

@@ -35,12 +35,14 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:id="@+id/et_edit_book_author"/>
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Change"/>
+            android:text="Change"
+            android:id="@+id/btn_change_author"/>
     </LinearLayout>
 
     <LinearLayout
@@ -50,12 +52,14 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"/>
+            android:layout_weight="2"
+            android:id="@+id/et_edit_book_genre"/>
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Change"/>
+            android:text="Change"
+            android:id="@+id/btn_change_genre"/>
     </LinearLayout>
     <Button
         android:layout_width="match_parent"

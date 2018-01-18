@@ -15,8 +15,10 @@ import com.example.abhishek.catalogwithretro.model.Book;
 import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
 import com.example.abhishek.catalogwithretro.network.AuthorInterface;
+import com.example.abhishek.catalogwithretro.network.BookInterface;
 import com.example.abhishek.catalogwithretro.network.GenreInterface;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +30,7 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
     Button btnEditBook, btnDeleteBook;
     private static final String GENRE_KEY = "genre";
     private static final String AUTHOR_KEY = "author";
+    BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
 
 
   /*  ProgressDialog mProgressDialog;
@@ -112,12 +115,32 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
                 intent.putExtra("bookLang",book.getLanguage());
                 intent.putExtra("bookPublishDate",book.getPublished());
                 intent.putExtra("bookPages",String.valueOf(book.getPages()));
+                intent.putExtra("authName",tvAuthoName.getText());
+                intent.putExtra("genreType",tvGenreType.getText());
                 intent.putExtra("authId",book.getAuthorId());
                 intent.putExtra("genreId",book.getGenreId());
                 startActivity(intent);
             }
         });
+       btnDeleteBook.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Call<ResponseBody> call = bookService.deleteBookEntry(book.getId());
+               call.enqueue(new Callback<ResponseBody>() {
+                   @Override
+                   public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                       // Toast.makeText(BookActivity.this, "Sucessfully deleted entry",Toast.LENGTH_SHORT).show();
+                       finish();
+                   }
 
+                   @Override
+                   public void onFailure(Call<ResponseBody> call, Throwable t) {
+                       Log.e("#",t.toString());
+                   }
+               });
+
+           }
+       });
     }
 
     @Override

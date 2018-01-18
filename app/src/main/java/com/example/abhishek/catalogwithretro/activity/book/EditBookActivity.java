@@ -19,8 +19,8 @@ import retrofit2.Response;
 
 public class EditBookActivity extends AppCompatActivity {
 
-    EditText etBookName, etBookLang, etBookPublishDate, etBookPages;
-    Button btnSaveBook;
+    EditText etBookName, etBookLang, etBookPublishDate, etBookPages, etBookGenre, etBookAuthor;
+    Button btnSaveBook, btnChangeAuthor, btnChangeGenre;
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
 
     @Override
@@ -32,13 +32,19 @@ public class EditBookActivity extends AppCompatActivity {
         etBookLang = (EditText) findViewById(R.id.et_edit_book_language);
         etBookPublishDate = (EditText) findViewById(R.id.et_edit_book_publishdate);
         etBookPages = (EditText) findViewById(R.id.et_edit_book_pages);
+        etBookAuthor = (EditText) findViewById(R.id.et_edit_book_author);
+        etBookGenre = (EditText) findViewById(R.id.et_edit_book_genre);
 
         btnSaveBook = (Button) findViewById(R.id.btn_edit_book);
+        btnChangeAuthor = (Button) findViewById(R.id.btn_change_author);
+        btnChangeGenre = (Button) findViewById(R.id.btn_change_genre);
 
         etBookName.setText(getIntent().getStringExtra("bookName"));
         etBookLang.setText(getIntent().getStringExtra("bookLang"));
         etBookPublishDate.setText(getIntent().getStringExtra("bookPublishDate"));
         etBookPages.setText(getIntent().getStringExtra("bookPages"));
+        etBookAuthor.setText(getIntent().getStringExtra("authName"));
+        etBookGenre.setText(getIntent().getStringExtra("genreType"));
 
         btnSaveBook.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -113,43 +113,6 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public void onAction(int position, int action) {
-
-        Book book = bookList.get(position);
-        switch (action){
-            case BookDetailsAdapter.ACTION_EDIT:
-                shouldReloadOnResume=true;
-                Intent intent = new Intent(BookActivity.this, EditBookActivity.class);
-                intent.putExtra("bookName",book.getName());
-                intent.putExtra("bookId",book.getId());
-                intent.putExtra("bookLang",book.getLanguage());
-                intent.putExtra("bookPublishDate",book.getPublished());
-                intent.putExtra("bookPages",String.valueOf(book.getPages()));
-                intent.putExtra("authId",book.getAuthorId());
-                intent.putExtra("genreId",book.getGenreId());
-                startActivity(intent);
-                break;
-            case BookDetailsAdapter.ACTION_DELETE:
-                Call<ResponseBody> call = bookService.deleteBookEntry(book.getId());
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                       // Toast.makeText(BookActivity.this, "Sucessfully deleted entry",Toast.LENGTH_SHORT).show();
-                        loadBooks();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG,t.toString());
-                    }
-                });
-
-                break;
-        }
-
-    }*/
-
     private void loadBooks(){
 
        /* mProgressDialog.setMessage("Downloading all books");
@@ -172,12 +135,11 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
                /* mProgressDialog.cancel();*/
             }
         });
-
-
     }
 
     @Override
     public void onItemClick(int position) {
+        shouldReloadOnResume = true;
         Intent intent = new Intent(this, BookDetailsActivity.class);
         intent.putExtra(SELECTED_BOOK,bookList.get(position));
         startActivity(intent);

@@ -1,5 +1,6 @@
 package com.example.abhishek.catalogwithretro.activity.book;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +10,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.abhishek.catalogwithretro.R;
+import com.example.abhishek.catalogwithretro.activity.book.AuthorNameSelection.Select_author_name_activity;
+import com.example.abhishek.catalogwithretro.model.Author;
 import com.example.abhishek.catalogwithretro.model.Book;
+import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
 import com.example.abhishek.catalogwithretro.network.BookInterface;
 
@@ -22,6 +26,10 @@ public class EditBookActivity extends AppCompatActivity {
     EditText etBookName, etBookLang, etBookPublishDate, etBookPages, etBookGenre, etBookAuthor;
     Button btnSaveBook, btnChangeAuthor, btnChangeGenre;
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
+    Author selectedAuthor;
+    Genre selectedGenre;
+
+    public static final int REQUEST_CODE_GENRETYPE = 1 , REQUEST_CODE_AUTHORNAME = 2 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +51,23 @@ public class EditBookActivity extends AppCompatActivity {
         etBookLang.setText(getIntent().getStringExtra("bookLang"));
         etBookPublishDate.setText(getIntent().getStringExtra("bookPublishDate"));
         etBookPages.setText(getIntent().getStringExtra("bookPages"));
-        etBookAuthor.setText(getIntent().getStringExtra("authName"));
-        etBookGenre.setText(getIntent().getStringExtra("genreType"));
+        selectedAuthor.setId(getIntent().getStringExtra("authId"));
+        selectedAuthor.setName(getIntent().getStringExtra("authName"));
+        setAuthor(selectedAuthor.getName());
+
+        selectedGenre.setId(getIntent().getStringExtra("genreId"));
+        selectedGenre.setName(getIntent().getStringExtra("genreType"));
+        setGenre(selectedGenre.getName());
+
+
+        btnChangeAuthor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(EditBookActivity.this,
+                                Select_author_name_activity.class),
+                        REQUEST_CODE_AUTHORNAME);
+            }
+        });
 
         btnSaveBook.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,8 +78,8 @@ public class EditBookActivity extends AppCompatActivity {
                                 etBookLang.getText().toString(),
                                 etBookPublishDate.getText().toString(),
                                 Integer.parseInt(etBookPages.getText().toString()),
-                                getIntent().getStringExtra("authId"),
-                                getIntent().getStringExtra("genreId")));
+                                selectedAuthor.getId(),
+                                selectedGenre.getId()));
                 call.enqueue(new Callback<Book>() {
                     @Override
                     public void onResponse(Call<Book> call, Response<Book> response) {
@@ -74,4 +97,36 @@ public class EditBookActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode){
+            case REQUEST_CODE_GENRETYPE:
+                // Intent intent = this.getIntent();
+                Bundle bundle = data.getExtras();
+
+                selectedGenre = (Genre) bundle.getSerializable("selectedGenreType");
+                setGenre(selectedGenre.getName());
+
+            case REQUEST_CODE_AUTHORNAME:
+                Bundle bun = data.getExtras();
+
+                selectedAuthor = (Author) bun.getSerializable("selectedAuthorName");
+                setAuthor(selectedAuthor.getName());
+        }
+
+    }
+
+    private void setAuthor(String authorName) {
+        etBookAuthor.setText(authorName);
+    }
+
+
+    private void setGenre(String name) {
+        etBookGenre.setText(name);
+    }
+
+
 }

@@ -18,20 +18,24 @@ import com.example.abhishek.catalogwithretro.network.AuthorInterface;
 import com.example.abhishek.catalogwithretro.network.BookInterface;
 import com.example.abhishek.catalogwithretro.network.GenreInterface;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookDetailsActivity extends AppCompatActivity implements RecyclerEditDeleteClickActionListener {
+public class BookDetailsActivity extends AppCompatActivity {
+
     Book book;
     TextView tvBookName, tvBookLanguage, tvBookPublishDate, tvBookNoOfPages, tvBookId,
             tvGenreType, tvAuthoName, tvFindBookByGenre, tvFindBookByAuthor;
     Button btnEditBook, btnDeleteBook;
     private static final String GENRE_KEY = "genre";
     private static final String AUTHOR_KEY = "author";
+    private static final String KEY_SHOULD_RELOAD = "shouldReload";
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
-
+    private boolean shouldReload = false;
 
   /*  ProgressDialog mProgressDialog;
 */
@@ -39,6 +43,7 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
     Genre genre;
     AuthorInterface authorService = ApiClient.getClient().create(AuthorInterface.class);
     GenreInterface genreService = ApiClient.getClient().create(GenreInterface.class);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
 
 
         if(savedInstanceState==null){
+
             loadGenreType(book.getGenreId());
             loadAuthorName(book.getAuthorId());
         }
@@ -89,6 +95,7 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
         tvFindBookByAuthor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shouldReload=false;
                 Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByAuthorActivity.class);
                 intent.putExtra("authorId",book.getAuthorId());
                 intent.putExtra("authorName",tvAuthoName.getText().toString());
@@ -99,6 +106,7 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
         tvFindBookByGenre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shouldReload=false;
                 Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByGenreActivity.class);
                 intent.putExtra("genreId",genre.getId());
                 intent.putExtra("genreName",tvGenreType.getText().toString());
@@ -109,6 +117,7 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
         btnEditBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                shouldReload = true;
                 Intent intent = new Intent(BookDetailsActivity.this, EditBookActivity.class);
                 intent.putExtra("bookName",book.getName());
                 intent.putExtra("bookId",book.getId());
@@ -149,6 +158,43 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
         outState.putString(AUTHOR_KEY,tvAuthoName.getText().toString());
         outState.putString(GENRE_KEY, tvGenreType.getText().toString());
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(shouldReload){
+          tvAuthoName.setText("XXXXXXXXXXXX");
+          tvGenreType.setText("XXXXXXXXXXXX");
+          reloadUpdatedBook(book.getId());
+          shouldReload=false;
+        }
+    }
+
+    private void reloadUpdatedBook(String id) {
+
+        Call<Book> call = bookService.getBook(id);
+        call.enqueue(new Callback<Book>() {
+            @Override
+            public void onResponse(Call<Book> call, Response<Book> response) {
+                book = response.body();
+                tvBookName.setText(book.getName());
+                tvBookId.setText(book.getId());
+                tvBookLanguage.setText(book.getLanguage());
+                tvBookPublishDate.setText(book.getPublished());
+                tvBookNoOfPages.setText(String.valueOf(book.getPages()));
+                loadAuthorName(book.getAuthorId());
+                loadGenreType(book.getGenreId());
+
+                /*mProgressDialog.cancel();*/
+            }
+
+            @Override
+            public void onFailure(Call<Book> call, Throwable t) {
+                Log.e("#",t.toString());
+               /* mProgressDialog.cancel();*/
+            }
+        });
     }
 
     private void loadAuthorName(String authorId) {
@@ -195,8 +241,4 @@ public class BookDetailsActivity extends AppCompatActivity implements RecyclerEd
 
     }
 
-    @Override
-    public void onAction(int position, int action) {
-
-    }
 }

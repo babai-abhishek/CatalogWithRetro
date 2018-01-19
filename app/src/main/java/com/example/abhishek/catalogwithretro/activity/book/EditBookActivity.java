@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.abhishek.catalogwithretro.R;
 import com.example.abhishek.catalogwithretro.activity.book.AuthorNameSelection.Select_author_name_activity;
+import com.example.abhishek.catalogwithretro.activity.book.GenreTypeSelection.Select_genre_type_activity;
 import com.example.abhishek.catalogwithretro.model.Author;
 import com.example.abhishek.catalogwithretro.model.Book;
 import com.example.abhishek.catalogwithretro.model.Genre;
@@ -26,8 +27,8 @@ public class EditBookActivity extends AppCompatActivity {
     EditText etBookName, etBookLang, etBookPublishDate, etBookPages, etBookGenre, etBookAuthor;
     Button btnSaveBook, btnChangeAuthor, btnChangeGenre;
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
-    Author selectedAuthor;
-    Genre selectedGenre;
+    Author selectedAuthor = new Author();
+    Genre selectedGenre = new Genre();
 
     public static final int REQUEST_CODE_GENRETYPE = 1 , REQUEST_CODE_AUTHORNAME = 2 ;
 
@@ -69,6 +70,16 @@ public class EditBookActivity extends AppCompatActivity {
             }
         });
 
+        btnChangeGenre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivityForResult(new Intent(EditBookActivity.this,
+                                Select_genre_type_activity.class),
+                        REQUEST_CODE_GENRETYPE);
+
+            }
+        });
         btnSaveBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,15 +117,15 @@ public class EditBookActivity extends AppCompatActivity {
             case REQUEST_CODE_GENRETYPE:
                 // Intent intent = this.getIntent();
                 Bundle bundle = data.getExtras();
-
                 selectedGenre = (Genre) bundle.getSerializable("selectedGenreType");
                 setGenre(selectedGenre.getName());
+                break;
 
             case REQUEST_CODE_AUTHORNAME:
                 Bundle bun = data.getExtras();
-
                 selectedAuthor = (Author) bun.getSerializable("selectedAuthorName");
                 setAuthor(selectedAuthor.getName());
+                break;
         }
 
     }

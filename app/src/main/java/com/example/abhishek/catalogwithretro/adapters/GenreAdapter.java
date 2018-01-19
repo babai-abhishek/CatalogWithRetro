@@ -88,19 +88,21 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
 
     class GenreViewHolder extends RecyclerView.ViewHolder{
 
-        TextView genreNameTextView;
+        TextView genreNameTextView, genreIdTextView;
         Button btnEdit, btnDelete;
 
         public GenreViewHolder(View itemView) {
             super(itemView);
 
             genreNameTextView = (TextView) itemView.findViewById(R.id.genre_list_item_name);
+            genreIdTextView = (TextView) itemView.findViewById(R.id.genre_list_item_id);
             btnEdit = (Button) itemView.findViewById(R.id.btnEdit);
             btnDelete=(Button)itemView.findViewById(R.id.btnDelete);
         }
 
         void bind(final Genre genre){
             genreNameTextView.setText(genre.getName());
+            genreIdTextView.setText(genre.getId());
         }
     }
 }

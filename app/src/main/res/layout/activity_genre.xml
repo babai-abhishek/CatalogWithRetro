@@ -7,37 +7,17 @@
     android:orientation="vertical"
     tools:context="com.example.abhishek.catalogwithretro.activity.genre.GenreActivity">
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="10dp">
-        <TextView
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Name"
-            android:textSize="20sp"/>
-
-        <TextView
-            android:gravity="center"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="ID"
-            android:textSize="20sp"/>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimaryDark"/>
+        android:gravity="center"
+        android:text="Genre"
+        android:textSize="20sp" />
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/genre_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/genre_recycler_view">
+        android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>

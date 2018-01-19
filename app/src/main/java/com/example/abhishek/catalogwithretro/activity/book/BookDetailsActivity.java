@@ -88,8 +88,17 @@ public class BookDetailsActivity extends AppCompatActivity {
             loadAuthorName(book.getAuthorId());
         }
         else {
-            tvAuthoName.setText(savedInstanceState.getString(AUTHOR_KEY));
-            tvGenreType.setText(savedInstanceState.getString(GENRE_KEY));
+            shouldReload = savedInstanceState.getBoolean(KEY_SHOULD_RELOAD);
+            tvAuthoName.setText("XXXXXXXXXXXX");
+            tvGenreType.setText("XXXXXXXXXXXX");
+            if(shouldReload){
+                reloadUpdatedBook(book.getId());
+            }
+            else {
+                tvAuthoName.setText(savedInstanceState.getString(AUTHOR_KEY));
+                tvGenreType.setText(savedInstanceState.getString(GENRE_KEY));
+            }
+
         }
 
         tvFindBookByAuthor.setOnClickListener(new View.OnClickListener() {
@@ -157,10 +166,11 @@ public class BookDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString(AUTHOR_KEY,tvAuthoName.getText().toString());
         outState.putString(GENRE_KEY, tvGenreType.getText().toString());
+        outState.putBoolean(KEY_SHOULD_RELOAD,shouldReload);
 
     }
 
-    @Override
+  /*  @Override
     protected void onResume() {
         super.onResume();
         if(shouldReload){
@@ -169,7 +179,7 @@ public class BookDetailsActivity extends AppCompatActivity {
           reloadUpdatedBook(book.getId());
           shouldReload=false;
         }
-    }
+    }*/
 
     private void reloadUpdatedBook(String id) {
 
@@ -195,6 +205,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                /* mProgressDialog.cancel();*/
             }
         });
+        shouldReload = false;
     }
 
     private void loadAuthorName(String authorId) {
@@ -207,7 +218,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Author> call, Response<Author> response) {
                 author = response.body();
-                tvAuthoName.setText(author.getName());
+                 tvAuthoName.setText(author.getName());
               /*  mProgressDialog.cancel();*/
             }
 

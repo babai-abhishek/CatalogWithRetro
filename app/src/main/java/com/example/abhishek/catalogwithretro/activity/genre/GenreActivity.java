@@ -62,6 +62,8 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
         public void onReceive(Context context, Intent intent) {
 
             switch (intent.getAction()){
+
+                    //action taken on sucessful genre list loading
                 case ACTION_GENRE_LIST_API_SUCCESS:
                     Toast.makeText(GenreActivity.this, "Api Success", Toast.LENGTH_SHORT).show();
                     genres= Arrays.asList((Genre[])intent.getParcelableArrayExtra(KEY_GENRES));
@@ -69,6 +71,8 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
                     isGenreLoaded = true;
                     postLoad();
                     break;
+
+                    //action taken on un-sucessful genre list loading
                 case ACTION_GENRE_LIST_API_FAILURE:
                     Toast.makeText(GenreActivity.this, "Api Failure", Toast.LENGTH_SHORT).show();
                     isGenreLoaded = true;
@@ -87,6 +91,7 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
 
         broadcastManager = LocalBroadcastManager.getInstance(GenreActivity.this);
 
+        //set up the "loading...." dialog box
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -105,6 +110,9 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
             genres = (List<Genre>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_GENRES), (new Genre[0]).getClass()));
 
             isGenreLoaded = savedInstanceState.getBoolean(KEY_IS_GENRE_LOADED);
+
+            //if genre list loading is still not completed from server
+            //then show the dialog box
             if(!isGenreLoaded){
                 showLoading();
             }

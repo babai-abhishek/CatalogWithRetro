@@ -116,7 +116,7 @@ public class Select_author_name_activity extends AppCompatActivity
     public void onItemClick(int position) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("selectedAuthorName", authors.get(position));
+        //bundle.putSerializable("selectedAuthorName", authors.get(position));
         intent.putExtras(bundle);
         setResult(AddNewBookActivity.REQUEST_CODE_AUTHORNAME,intent);
         finish();

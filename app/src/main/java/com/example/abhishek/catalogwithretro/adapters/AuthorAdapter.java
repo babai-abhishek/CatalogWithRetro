@@ -65,7 +65,7 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorAdapter.AuthorView
         return authorList.size();
     }
 
-    public void setAuthors(List<Author> authorList) {
+    public void setAuthorList(List<Author> authorList) {
         this.authorList=authorList;
         notifyDataSetChanged();
     }

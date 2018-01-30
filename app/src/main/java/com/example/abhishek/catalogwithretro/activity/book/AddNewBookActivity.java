@@ -153,8 +153,8 @@ public class AddNewBookActivity extends AppCompatActivity{
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(SELECTED_GENRE_KEY, selectedGenre);
-        outState.putSerializable(SELECTED_AUTHOR_KEY, selectedAuthor);
+        /*outState.putSerializable(SELECTED_GENRE_KEY, selectedGenre);
+        outState.putSerializable(SELECTED_AUTHOR_KEY, selectedAuthor);*/
     }
 
     private void updateLabel() {

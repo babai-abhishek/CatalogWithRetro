@@ -114,7 +114,7 @@ public class Select_genre_type_activity extends AppCompatActivity implements
     public void onItemClick(int position) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("selectedGenreType", genres.get(position));
+       // bundle.putSerializable("selectedGenreType", genres.get(position));
         intent.putExtras(bundle);
         setResult(AddNewBookActivity.REQUEST_CODE_GENRETYPE,intent);
         finish();

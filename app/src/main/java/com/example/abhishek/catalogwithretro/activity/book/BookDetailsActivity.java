@@ -1,5 +1,6 @@
 package com.example.abhishek.catalogwithretro.activity.book;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,12 +38,14 @@ public class BookDetailsActivity extends AppCompatActivity {
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
     private boolean shouldReload = false;
 
-  /*  ProgressDialog mProgressDialog;
-*/
+    ProgressDialog mProgressDialog;
+
     Author author;
     Genre genre;
     AuthorInterface authorService = ApiClient.getClient().create(AuthorInterface.class);
     GenreInterface genreService = ApiClient.getClient().create(GenreInterface.class);
+
+    private boolean isGenreLoaded = false, isAuthorLoaded = false, isBookLoaded = true;
 
 
     @Override
@@ -51,7 +54,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_details);
 
         Bundle bookBundle = getIntent().getExtras();
-        book = (Book) bookBundle.getSerializable(BookActivity.SELECTED_BOOK);
+        book = (Book) bookBundle.getParcelable(BookActivity.SELECTED_BOOK);
 
         tvBookName = (TextView) findViewById(R.id.tv_book_name);
         tvBookId = (TextView) findViewById(R.id.tv_book_id);
@@ -68,12 +71,12 @@ public class BookDetailsActivity extends AppCompatActivity {
         btnEditBook = (Button) findViewById(R.id.btn_book_edit);
         btnDeleteBook = (Button) findViewById(R.id.btn_book_delete);
 
-      /*  mProgressDialog = new ProgressDialog(this);
+        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(false);*/
+        mProgressDialog.setCancelable(false);
 
-        Log.d("#","selected bookName "+book.getName());
+        Log.d("#", "selected bookName " + book.getName());
 
         tvBookName.setText(book.getName());
         tvBookId.setText(book.getId());
@@ -82,19 +85,17 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvBookNoOfPages.setText(String.valueOf(book.getPages()));
 
 
-        if(savedInstanceState==null){
+        if (savedInstanceState == null) {
 
             loadGenreType(book.getGenreId());
             loadAuthorName(book.getAuthorId());
-        }
-        else {
+        } else {
             shouldReload = savedInstanceState.getBoolean(KEY_SHOULD_RELOAD);
             tvAuthoName.setText("XXXXXXXXXXXX");
             tvGenreType.setText("XXXXXXXXXXXX");
-            if(shouldReload){
+            if (shouldReload) {
                 reloadUpdatedBook(book.getId());
-            }
-            else {
+            } else {
                 tvAuthoName.setText(savedInstanceState.getString(AUTHOR_KEY));
                 tvGenreType.setText(savedInstanceState.getString(GENRE_KEY));
             }
@@ -104,10 +105,10 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvFindBookByAuthor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shouldReload=false;
+                shouldReload = false;
                 Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByAuthorActivity.class);
-                intent.putExtra("authorId",book.getAuthorId());
-                intent.putExtra("authorName",tvAuthoName.getText().toString());
+                intent.putExtra("authorId", book.getAuthorId());
+                intent.putExtra("authorName", tvAuthoName.getText().toString());
                 startActivity(intent);
             }
         });
@@ -115,10 +116,10 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvFindBookByGenre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shouldReload=false;
+                shouldReload = false;
                 Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByGenreActivity.class);
-                intent.putExtra("genreId",genre.getId());
-                intent.putExtra("genreName",tvGenreType.getText().toString());
+                intent.putExtra("genreId", genre.getId());
+                intent.putExtra("genreName", tvGenreType.getText().toString());
                 startActivity(intent);
             }
         });
@@ -128,45 +129,45 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 shouldReload = true;
                 Intent intent = new Intent(BookDetailsActivity.this, EditBookActivity.class);
-                intent.putExtra("bookName",book.getName());
-                intent.putExtra("bookId",book.getId());
-                intent.putExtra("bookLang",book.getLanguage());
-                intent.putExtra("bookPublishDate",book.getPublished());
-                intent.putExtra("bookPages",String.valueOf(book.getPages()));
-                intent.putExtra("authName",tvAuthoName.getText());
-                intent.putExtra("genreType",tvGenreType.getText());
-                intent.putExtra("authId",book.getAuthorId());
-                intent.putExtra("genreId",book.getGenreId());
+                intent.putExtra("bookName", book.getName());
+                intent.putExtra("bookId", book.getId());
+                intent.putExtra("bookLang", book.getLanguage());
+                intent.putExtra("bookPublishDate", book.getPublished());
+                intent.putExtra("bookPages", String.valueOf(book.getPages()));
+                intent.putExtra("authName", tvAuthoName.getText());
+                intent.putExtra("genreType", tvGenreType.getText());
+                intent.putExtra("authId", book.getAuthorId());
+                intent.putExtra("genreId", book.getGenreId());
                 startActivity(intent);
             }
         });
-       btnDeleteBook.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               Call<ResponseBody> call = bookService.deleteBookEntry(book.getId());
-               call.enqueue(new Callback<ResponseBody>() {
-                   @Override
-                   public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                       // Toast.makeText(BookActivity.this, "Sucessfully deleted entry",Toast.LENGTH_SHORT).show();
-                       finish();
-                   }
+        btnDeleteBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Call<ResponseBody> call = bookService.deleteBookEntry(book.getId());
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        // Toast.makeText(BookActivity.this, "Sucessfully deleted entry",Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
 
-                   @Override
-                   public void onFailure(Call<ResponseBody> call, Throwable t) {
-                       Log.e("#",t.toString());
-                   }
-               });
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("#", t.toString());
+                    }
+                });
 
-           }
-       });
+            }
+        });
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(AUTHOR_KEY,tvAuthoName.getText().toString());
+        outState.putString(AUTHOR_KEY, tvAuthoName.getText().toString());
         outState.putString(GENRE_KEY, tvGenreType.getText().toString());
-        outState.putBoolean(KEY_SHOULD_RELOAD,shouldReload);
+        outState.putBoolean(KEY_SHOULD_RELOAD, shouldReload);
 
     }
 
@@ -196,13 +197,15 @@ public class BookDetailsActivity extends AppCompatActivity {
                 loadAuthorName(book.getAuthorId());
                 loadGenreType(book.getGenreId());
 
-                /*mProgressDialog.cancel();*/
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
             }
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.e("#",t.toString());
-               /* mProgressDialog.cancel();*/
+                Log.e("#", t.toString());
+                mProgressDialog.dismiss();
             }
         });
         shouldReload = false;
@@ -210,31 +213,31 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     private void loadAuthorName(String authorId) {
 
-       /* mProgressDialog.setMessage("Downloading author name");
-        mProgressDialog.show();
-*/
+        isAuthorLoaded=false;
+        showLoading();
         Call<Author> call = authorService.getAuthor(authorId);
         call.enqueue(new Callback<Author>() {
             @Override
             public void onResponse(Call<Author> call, Response<Author> response) {
                 author = response.body();
-                 tvAuthoName.setText(author.getName());
-              /*  mProgressDialog.cancel();*/
+                tvAuthoName.setText(author.getName());
+                isAuthorLoaded=true;
+                postLoad();
             }
 
             @Override
             public void onFailure(Call<Author> call, Throwable t) {
-                Log.e("#",t.toString());
+                Log.e("#", t.toString());
+                isAuthorLoaded=true;
+                postLoad();
             }
         });
 
     }
 
     private void loadGenreType(String genreId) {
-
-      /*  mProgressDialog.setMessage("Downloading genre type");
-        mProgressDialog.show();
-*/
+        isGenreLoaded=false;
+        showLoading();
         Call<Genre> call = genreService.getGenre(genreId);
         call.enqueue(new Callback<Genre>() {
             @Override
@@ -242,14 +245,35 @@ public class BookDetailsActivity extends AppCompatActivity {
                 genre = response.body();
                 tvGenreType.setText(genre.getName());
                /* mProgressDialog.cancel();*/
+               isGenreLoaded=true;
+               postLoad();
             }
 
             @Override
             public void onFailure(Call<Genre> call, Throwable t) {
                 Log.e("#", t.toString());
+                isGenreLoaded=true;
+                postLoad();
             }
         });
 
+    }
+
+    private void postLoad() {
+        if (isAuthorLoaded && isGenreLoaded && isBookLoaded)
+            hideLoading();
+    }
+
+    private void showLoading() {
+        if (mProgressDialog.isShowing())
+            return;
+        mProgressDialog.setMessage("Loading.......");
+        mProgressDialog.show();
+    }
+
+    private void hideLoading() {
+        if (mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
     }
 
 }

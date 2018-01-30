@@ -1,11 +1,14 @@
 package com.example.abhishek.catalogwithretro.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Book implements Serializable{
+public class Book implements Parcelable{
 
     @SerializedName("name")
     @Expose
@@ -45,19 +48,29 @@ public class Book implements Serializable{
         this.genreId = genreId;
     }
 
- /*   *//**
-     *  @param name
-     * @param language
-     * @param published
-     * @param pages
-     *//*
-    public Book(String name, String language, String published, int pages) {
-        super();
-        this.name = name;
-        this.language = language;
-        this.published = published;
-        this.pages = pages;
-    }*/
+ /*   */
+
+    protected Book(Parcel in) {
+        name = in.readString();
+        language = in.readString();
+        published = in.readString();
+        pages = in.readInt();
+        authorId = in.readString();
+        genreId = in.readString();
+        id = in.readString();
+    }
+
+    public static final Creator<Book> CREATOR = new Creator<Book>() {
+        @Override
+        public Book createFromParcel(Parcel in) {
+            return new Book(in);
+        }
+
+        @Override
+        public Book[] newArray(int size) {
+            return new Book[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -115,4 +128,19 @@ public class Book implements Serializable{
         this.id = id;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(language);
+        dest.writeString(published);
+        dest.writeInt(pages);
+        dest.writeString(authorId);
+        dest.writeString(genreId);
+        dest.writeString(id);
+    }
 }

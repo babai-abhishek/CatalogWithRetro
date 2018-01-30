@@ -55,7 +55,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookAd
         return bookList.size();
     }
 
-    public void setAdapter(List<Book> bookList) {
+    public void setBookList(List<Book> bookList) {
         this.bookList = bookList;
         notifyDataSetChanged();
     }

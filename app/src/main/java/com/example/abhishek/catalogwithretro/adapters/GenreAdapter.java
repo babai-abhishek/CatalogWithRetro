@@ -81,7 +81,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
         return genreList.size();
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenreList(List<Genre> genres) {
         this.genreList=genres;
         notifyDataSetChanged();
     }

@@ -137,14 +137,14 @@ public class AddNewBookActivity extends AppCompatActivity{
                 // Intent intent = this.getIntent();
                 Bundle bundle = data.getExtras();
 
-                selectedGenre = (Genre) bundle.getSerializable("selectedGenreType");
+                selectedGenre = (Genre) bundle.getParcelable("selectedGenreType");
                 setGenre(selectedGenre);
                 Log.d("#","selected genre "+selectedGenre.getName()+" with id "+selectedGenre.getId());
 
             case REQUEST_CODE_AUTHORNAME:
                 Bundle bun = data.getExtras();
 
-                selectedAuthor = (Author) bun.getSerializable("selectedAuthorName");
+                selectedAuthor = (Author) bun.getParcelable("selectedAuthorName");
                 setAuthor(selectedAuthor);
         }
 
@@ -153,8 +153,8 @@ public class AddNewBookActivity extends AppCompatActivity{
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        /*outState.putSerializable(SELECTED_GENRE_KEY, selectedGenre);
-        outState.putSerializable(SELECTED_AUTHOR_KEY, selectedAuthor);*/
+        outState.putParcelable(SELECTED_GENRE_KEY, selectedGenre);
+        outState.putParcelable(SELECTED_AUTHOR_KEY, selectedAuthor);
     }
 
     private void updateLabel() {

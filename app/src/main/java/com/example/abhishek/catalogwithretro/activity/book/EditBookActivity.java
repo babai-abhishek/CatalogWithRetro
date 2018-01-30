@@ -52,6 +52,7 @@ public class EditBookActivity extends AppCompatActivity {
         etBookLang.setText(getIntent().getStringExtra("bookLang"));
         etBookPublishDate.setText(getIntent().getStringExtra("bookPublishDate"));
         etBookPages.setText(getIntent().getStringExtra("bookPages"));
+
         selectedAuthor.setId(getIntent().getStringExtra("authId"));
         selectedAuthor.setName(getIntent().getStringExtra("authName"));
         setAuthor(selectedAuthor.getName());
@@ -80,6 +81,7 @@ public class EditBookActivity extends AppCompatActivity {
 
             }
         });
+
         btnSaveBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,13 +119,13 @@ public class EditBookActivity extends AppCompatActivity {
             case REQUEST_CODE_GENRETYPE:
                 // Intent intent = this.getIntent();
                 Bundle bundle = data.getExtras();
-                selectedGenre = (Genre) bundle.getSerializable("selectedGenreType");
+                selectedGenre = (Genre) bundle.getParcelable("selectedGenreType");
                 setGenre(selectedGenre.getName());
                 break;
 
             case REQUEST_CODE_AUTHORNAME:
                 Bundle bun = data.getExtras();
-                selectedAuthor = (Author) bun.getSerializable("selectedAuthorName");
+                selectedAuthor = (Author) bun.getParcelable("selectedAuthorName");
                 setAuthor(selectedAuthor.getName());
                 break;
         }

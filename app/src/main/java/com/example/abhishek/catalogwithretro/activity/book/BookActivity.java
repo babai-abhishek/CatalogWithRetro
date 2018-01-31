@@ -101,6 +101,7 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(bookListAdapter);
 
+
         if(savedInstanceState!=null){
             bookList = (List<Book>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_BOOKS), (new Book[0]).getClass()));
             isBookLoaded = savedInstanceState.getBoolean(KEY_IS_BOOK_LOADED);

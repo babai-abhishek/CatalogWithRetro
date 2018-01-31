@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,33 +19,27 @@ import com.example.abhishek.catalogwithretro.model.Author;
 import com.example.abhishek.catalogwithretro.model.Book;
 import com.example.abhishek.catalogwithretro.model.Genre;
 import com.example.abhishek.catalogwithretro.network.ApiClient;
-import com.example.abhishek.catalogwithretro.network.AuthorInterface;
 import com.example.abhishek.catalogwithretro.network.BookInterface;
-import com.example.abhishek.catalogwithretro.network.GenreInterface;
-import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddNewBookActivity extends AppCompatActivity{
+public class AddNewBookActivity extends AppCompatActivity {
 
     EditText etNewBookName, etNewBookLanguage, etNewBookPublishDate, etNewBookPages;
     Button btnSaveNewBook;
     final Calendar myCalendar = Calendar.getInstance();
     BookInterface bookService = ApiClient.getClient().create(BookInterface.class);
-    Genre selectedGenre =null;
-    Author selectedAuthor = null;
+    Genre selectedGenre = new Genre();
+    Author selectedAuthor = new Author();
     TextView tvGenreType, tvAuthorName;
 
-    public static final int REQUEST_CODE_GENRETYPE = 1 , REQUEST_CODE_AUTHORNAME = 2 ;
+    public static final int REQUEST_CODE_GENRETYPE = 1, REQUEST_CODE_AUTHORNAME = 2;
     private final String SELECTED_GENRE_KEY = "genres";
     private final String SELECTED_AUTHOR_KEY = "authors";
 
@@ -64,17 +57,16 @@ public class AddNewBookActivity extends AppCompatActivity{
         etNewBookLanguage = (EditText) findViewById(R.id.et_new_book_language);
         etNewBookPages = (EditText) findViewById(R.id.et_new_book_pages);
 
-        if(savedInstanceState!=null){
-            selectedAuthor = (Author) savedInstanceState.getSerializable(SELECTED_AUTHOR_KEY);
-            selectedGenre = (Genre) savedInstanceState.getSerializable(SELECTED_GENRE_KEY);
-            setGenre(selectedGenre);
-            setAuthor(selectedAuthor);
+        if (savedInstanceState != null) {
+            selectedAuthor = (Author) savedInstanceState.getParcelable(SELECTED_AUTHOR_KEY);
+            selectedGenre = (Genre) savedInstanceState.getParcelable(SELECTED_GENRE_KEY);
+            setGenre();
+            setAuthor();
+        } else {
+            setGenre();
+            setAuthor();
         }
-        else {
-            setGenre(null);
-            setAuthor(null);
-        }
-        tvGenreType.setOnClickListener(new View.OnClickListener(){
+        tvGenreType.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -87,7 +79,7 @@ public class AddNewBookActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivityForResult(new Intent(AddNewBookActivity.this,
-                        Select_author_name_activity.class),
+                                Select_author_name_activity.class),
                         REQUEST_CODE_AUTHORNAME);
             }
         });
@@ -121,9 +113,22 @@ public class AddNewBookActivity extends AppCompatActivity{
         btnSaveNewBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewBookEntry(new Book(etNewBookName.getText().toString(), etNewBookLanguage.getText().toString(),
-                        etNewBookPublishDate.getText().toString(), Integer.parseInt(etNewBookPages.getText().toString()),
-                        selectedAuthor.getId(),selectedGenre.getId()));
+
+                String bookName = etNewBookName.getText().toString().trim();
+                String lang = etNewBookLanguage.getText().toString().trim();
+                String date = etNewBookPublishDate.getText().toString();
+                int pages = Integer.parseInt(String.valueOf(etNewBookPages.getText().toString().equals("") ? 0 : etNewBookPages.getText().toString()));
+                /* String authId =  selectedAuthor.getId();
+                 String genreId = selectedGenre.getId();*/
+
+                if (bookName.isEmpty() || lang.isEmpty() || date.isEmpty() || pages <= 0 ||
+                        selectedAuthor.getId() == null || selectedGenre.getId() == null) {
+                    Toast.makeText(AddNewBookActivity.this, "Please fill all the fields correctly ", Toast.LENGTH_SHORT).show();
+                } else {
+                    createNewBookEntry(new Book(bookName, lang,
+                            date, pages,
+                            selectedAuthor.getId(), selectedGenre.getId()));
+                }
             }
         });
     }
@@ -132,20 +137,24 @@ public class AddNewBookActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_CODE_GENRETYPE:
                 // Intent intent = this.getIntent();
-                Bundle bundle = data.getExtras();
-
-                selectedGenre = (Genre) bundle.getParcelable("selectedGenreType");
-                setGenre(selectedGenre);
-                Log.d("#","selected genre "+selectedGenre.getName()+" with id "+selectedGenre.getId());
+                if (data != null) {
+                    Bundle bundle = data.getExtras();
+                    selectedGenre = (Genre) bundle.getParcelable("selectedGenreType");
+                    setGenre();
+                    Log.d("#", "selected genre " + selectedGenre.getName() + " with id " + selectedGenre.getId());
+                }
+                break;
 
             case REQUEST_CODE_AUTHORNAME:
-                Bundle bun = data.getExtras();
-
-                selectedAuthor = (Author) bun.getParcelable("selectedAuthorName");
-                setAuthor(selectedAuthor);
+                if (data != null) {
+                    Bundle bun = data.getExtras();
+                    selectedAuthor = (Author) bun.getParcelable("selectedAuthorName");
+                    setAuthor();
+                }
+                break;
         }
 
     }
@@ -185,23 +194,19 @@ public class AddNewBookActivity extends AppCompatActivity{
 
     }
 
-    private void setGenre(Genre genre){
-        selectedGenre =genre;
-        if(genre==null){
+    private void setGenre() {
+        if (selectedGenre.getName() == null) {
             tvGenreType.setText("Click to select genre");
-        }
-        else{
-            tvGenreType.setText("Selected Genre : "+genre.getName());
+        } else {
+            tvGenreType.setText("Selected Genre : " + selectedGenre.getName());
         }
     }
 
-    private void setAuthor(Author author) {
-        selectedAuthor = author;
-        if(author==null){
+    private void setAuthor() {
+        if (selectedAuthor.getName() == null) {
             tvAuthorName.setText("Click to select author");
-        }
-        else{
-            tvAuthorName.setText("Selected Author : "+author.getName());
+        } else {
+            tvAuthorName.setText("Selected Author : " + selectedAuthor.getName());
         }
     }
 }

@@ -36,6 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:inputType="number"
         android:hint="Enter no of pages in book"
         android:id="@+id/et_new_book_pages"/>
     <TextView

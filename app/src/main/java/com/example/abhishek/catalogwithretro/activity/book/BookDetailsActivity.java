@@ -269,7 +269,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         if(shouldReload){
             reloadUpdatedBook(book.getId());
         }
-     //   shouldReload = false;
+        shouldReload = false;
     }
 
     @Override

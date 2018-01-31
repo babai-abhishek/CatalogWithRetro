@@ -118,15 +118,22 @@ public class EditBookActivity extends AppCompatActivity {
         switch (requestCode){
             case REQUEST_CODE_GENRETYPE:
                 // Intent intent = this.getIntent();
-                Bundle bundle = data.getExtras();
-                selectedGenre = (Genre) bundle.getParcelable("selectedGenreType");
-                setGenre(selectedGenre.getName());
+                if(data!=null){
+                    Bundle bundle = data.getExtras();
+                    selectedGenre = (Genre) bundle.getParcelable("selectedGenreType");
+                    setGenre(selectedGenre.getName());
+                }
+                //setGenre(selectedGenre.getName());
                 break;
 
             case REQUEST_CODE_AUTHORNAME:
-                Bundle bun = data.getExtras();
-                selectedAuthor = (Author) bun.getParcelable("selectedAuthorName");
-                setAuthor(selectedAuthor.getName());
+                if(data!=null){
+                    Bundle bun = data.getExtras();
+                    selectedAuthor = (Author) bun.getParcelable("selectedAuthorName");
+                    setAuthor(selectedAuthor.getName());
+
+                }
+               /* setAuthor(selectedAuthor.getName());*/
                 break;
         }
 

@@ -170,9 +170,16 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
         call.enqueue(new Callback<List<Genre>>() {
             @Override
             public void onResponse(Call<List<Genre>> call, Response<List<Genre>> response) {
-                Intent intent = new Intent(ACTION_GENRE_LIST_API_SUCCESS);
-                intent.putExtra(KEY_GENRES,response.body().toArray(new Genre[0]));
-                broadcastManager.sendBroadcast(intent);
+                if(response.isSuccessful()) { //if(response.code()>=200 && response.code()<300)
+                    Intent intent = new Intent(ACTION_GENRE_LIST_API_SUCCESS);
+                    intent.putExtra(KEY_GENRES, response.body().toArray(new Genre[0]));
+                    broadcastManager.sendBroadcast(intent);
+                } /*else{
+                    Intent intent = new Intent(ACTION_GENRE_LIST_API_SERVER_FAILURE);
+                    intent.putExtra("STATUS", response.code());
+                    intent.putExtra("BODY", response.errorBody().string());
+                    broadcastManager.sendBroadcast(intent);
+                }*/
 
             }
 
@@ -239,6 +246,7 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
 
 
         private void showLoading() {
+            adapter.setLoading(true);
             if (mProgressDialog.isShowing())
                 return;
             mProgressDialog.setMessage("Loading.......");
@@ -246,6 +254,7 @@ public class GenreActivity extends AppCompatActivity implements RecyclerEditDele
         }
 
         private void hideLoading() {
+            adapter.setLoading(false);
             if (mProgressDialog.isShowing())
                 mProgressDialog.dismiss();
         }

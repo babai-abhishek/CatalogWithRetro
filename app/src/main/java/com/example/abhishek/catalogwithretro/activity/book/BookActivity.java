@@ -202,6 +202,7 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
     }
 
     private void showLoading() {
+        bookListAdapter.setLoading(true);
         if (mProgressDialog.isShowing())
             return;
         mProgressDialog.setMessage("Loading.......");
@@ -209,6 +210,7 @@ public class BookActivity extends AppCompatActivity implements RecyclerClickList
     }
 
     private void hideLoading() {
+        bookListAdapter.setLoading(false);
         if (mProgressDialog.isShowing())
             mProgressDialog.dismiss();
     }

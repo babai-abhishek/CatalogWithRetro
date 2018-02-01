@@ -71,9 +71,12 @@ public class GenreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder rvHolder, int position) {
+
         if (genreList.size() < 1 || isLoading()) {
+
             ((EmptyViewHolder)rvHolder).message.setText(isLoading()?"Loading...":"No items found!");
             //show a template saying no genre found. and give a button to add a new genre
+
         } else {
             GenreViewHolder holder = (GenreViewHolder) rvHolder;
             final Genre genre = genreList.get(position);
@@ -104,11 +107,12 @@ public class GenreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
         //return super.getItemViewType(position);
-        if (genreList.size() < 1)
+        if (genreList.size() < 1 || isLoading())
             return VIEW_TYPE_EMPTY;
         else
             return VIEW_TYPE_ITEM;
     }
+
 
     @Override
     public int getItemCount() {

@@ -7,7 +7,7 @@
     android:layout_gravity="center">
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/author_empty_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="No Items Found"/>

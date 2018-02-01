@@ -17,13 +17,26 @@ import java.util.List;
  * Created by abhishek on 13/11/17.
  */
 
-public class AuthorAdapter extends RecyclerView.Adapter<AuthorAdapter.AuthorViewHolder>{
+public class AuthorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Author> authorList;
     private RecyclerEditDeleteClickActionListener recyclerEditDeleteClickActionListener;
-    public static final int ACTION_EDIT=0;
-    public static final int ACTION_DELETE=1;
+    public static final int ACTION_EDIT = 0;
+    public static final int ACTION_DELETE = 1;
 
+    private static final int VIEW_TYPE_ITEM = 0;
+    private static final int VIEW_TYPE_EMPTY = 1;
+
+    private boolean isLoading = false;
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+        notifyDataSetChanged();
+    }
+
+    public boolean isLoading() {
+        return isLoading;
+    }
 
     public AuthorAdapter(List<Author> authorListlist, RecyclerEditDeleteClickActionListener recyclerEditDeleteClickActionListener) {
         this.authorList = authorListlist;
@@ -31,45 +44,71 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorAdapter.AuthorView
     }
 
     @Override
-    public AuthorViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        int layoutIdForListItem = R.layout.author_list_item;
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(layoutIdForListItem,
-                parent,false);
-        AuthorViewHolder authorViewHolder = new AuthorViewHolder(view);
-        return authorViewHolder;
+    public int getItemViewType(int position) {
+        /*return super.getItemViewType(position);*/
+        if (authorList.size() < 1 || isLoading())
+            return VIEW_TYPE_EMPTY;
+        else
+            return VIEW_TYPE_ITEM;
     }
 
     @Override
-    public void onBindViewHolder(AuthorViewHolder holder,int position) {
-        final Author author = authorList.get(position);
-        holder.bind(author);
-        holder.btnEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recyclerEditDeleteClickActionListener.onAction(authorList.indexOf(author),ACTION_EDIT);
-            }
-        });
-        holder.btnDel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                recyclerEditDeleteClickActionListener.onAction(authorList.indexOf(author),ACTION_DELETE);
-            }
-        });
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view;
+        switch (viewType) {
+            case VIEW_TYPE_ITEM:
+                view = inflater.inflate(R.layout.author_list_item,
+                        parent, false);
+                AuthorViewHolder authorViewHolder = new AuthorViewHolder(view);
+                return authorViewHolder;
 
+            default:
+                view = inflater.inflate(R.layout.author_list_empty_item,
+                        parent, false);
+                EmptyListViewHolder emptyListViewHolder = new EmptyListViewHolder(view);
+                return emptyListViewHolder;
+        }
+
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if (authorList.size() < 1 || isLoading()) {
+            ((EmptyListViewHolder) holder).emptyListMessage.setText(isLoading() ? "Loading...." : "No items found!");
+        } else {
+            AuthorViewHolder authorViewHolder = (AuthorViewHolder) holder;
+            final Author author = authorList.get(position);
+            authorViewHolder.bind(author);
+            authorViewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    recyclerEditDeleteClickActionListener.onAction(authorList.indexOf(author), ACTION_EDIT);
+                }
+            });
+            authorViewHolder.btnDel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    recyclerEditDeleteClickActionListener.onAction(authorList.indexOf(author), ACTION_DELETE);
+                }
+            });
+        }
     }
 
     @Override
     public int getItemCount() {
-        return authorList.size();
+        int authorListSize = authorList.size();
+        return authorListSize < 1 || isLoading() ? 1 : authorListSize;
     }
 
     public void setAuthorList(List<Author> authorList) {
-        this.authorList=authorList;
+        this.authorList = authorList;
         notifyDataSetChanged();
     }
-    class AuthorViewHolder extends RecyclerView.ViewHolder{
+
+    class AuthorViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_auth_name, tv_auth_id, tv_auth_language, tv_auth_country;
         Button btnEdit, btnDel;
@@ -86,11 +125,22 @@ public class AuthorAdapter extends RecyclerView.Adapter<AuthorAdapter.AuthorView
             btnDel = (Button) itemView.findViewById(R.id.btn_author_delete);
         }
 
-        void bind(final Author author){
+        void bind(final Author author) {
             tv_auth_name.setText(author.getName());
             tv_auth_id.setText(author.getId());
             tv_auth_language.setText(author.getLanguage());
             tv_auth_country.setText(author.getCountry());
+        }
+    }
+
+    private class EmptyListViewHolder extends RecyclerView.ViewHolder {
+
+        TextView emptyListMessage;
+
+        public EmptyListViewHolder(View itemView) {
+            super(itemView);
+            emptyListMessage = (TextView) itemView.findViewById(R.id.author_empty_message);
+
         }
     }
 }

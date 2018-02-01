@@ -40,8 +40,8 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
     public static final String KEY_IS_AUTHOR_LOADED = "isAuthorLoaded";
     private boolean shouldReloadOnResume = false;
 
-    private static final String ACTION_AUTHOR_LIST_API_SUCCESS="com.example.abhishek.catalogwithretro.api.authors.all.result.success";
-    private static final String ACTION_AUTHOR_LIST_API_FAILURE="com.example.abhishek.catalogwithretro.api.authors.all.result.failure";
+    private static final String ACTION_AUTHOR_LIST_API_SUCCESS = "com.example.abhishek.catalogwithretro.api.authors.all.result.success";
+    private static final String ACTION_AUTHOR_LIST_API_FAILURE = "com.example.abhishek.catalogwithretro.api.authors.all.result.failure";
 
     private LocalBroadcastManager broadcastManager = null;
     ProgressDialog mProgressDialog;
@@ -50,10 +50,10 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            switch (intent.getAction()){
+            switch (intent.getAction()) {
                 case ACTION_AUTHOR_LIST_API_SUCCESS:
                     Toast.makeText(AuthorActivity.this, "Api Success", Toast.LENGTH_SHORT).show();
-                    authorList= Arrays.asList((Author[])intent.getParcelableArrayExtra(KEY_AUTHORS));
+                    authorList = Arrays.asList((Author[]) intent.getParcelableArrayExtra(KEY_AUTHORS));
                     adapter.setAuthorList(authorList);
                     isAuthorLoaded = true;
                     postLoad();
@@ -95,31 +95,31 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
 
         recyclerView = (RecyclerView) findViewById(R.id.author_recycler_view);
         authorList = new ArrayList<>();
-        adapter=new AuthorAdapter(authorList,this);
+        adapter = new AuthorAdapter(authorList, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
 
-        if(savedInstanceState!=null){
-            authorList = (List<Author>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_AUTHORS),(new Author[0]).getClass()));
+        if (savedInstanceState != null) {
+            authorList = (List<Author>) Arrays.asList(new Gson().fromJson(savedInstanceState.getString(KEY_AUTHORS), (new Author[0]).getClass()));
 
             isAuthorLoaded = savedInstanceState.getBoolean(KEY_IS_AUTHOR_LOADED);
-            if(!isAuthorLoaded){
+            if (!isAuthorLoaded) {
                 showLoading();
             }
 
 
             shouldReloadOnResume = savedInstanceState.getBoolean(KEY_SHOULD_RELOAD_ON_RESUME);
-            if(!shouldReloadOnResume){
+            if (!shouldReloadOnResume) {
                 adapter.setAuthorList(authorList);
             }
-        }
-        else {
+        } else {
             loadAuthors();
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -130,7 +130,7 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
         filter.addAction(ACTION_AUTHOR_LIST_API_FAILURE);
         broadcastManager.registerReceiver(broadcastReceiver, filter);
 
-        if(shouldReloadOnResume){
+        if (shouldReloadOnResume) {
             loadAuthors();
         }
         shouldReloadOnResume = false;
@@ -162,13 +162,13 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
             @Override
             public void onResponse(Call<List<Author>> call, Response<List<Author>> response) {
                 Intent intent = new Intent(ACTION_AUTHOR_LIST_API_SUCCESS);
-                intent.putExtra(KEY_AUTHORS,response.body().toArray(new Author[0]));
+                intent.putExtra(KEY_AUTHORS, response.body().toArray(new Author[0]));
                 broadcastManager.sendBroadcast(intent);
             }
 
             @Override
             public void onFailure(Call<List<Author>> call, Throwable t) {
-                Log.e(TAG,t.toString());
+                Log.e(TAG, t.toString());
                 Intent intent = new Intent(ACTION_AUTHOR_LIST_API_FAILURE);
                 broadcastManager.sendBroadcast(intent);
             }
@@ -184,9 +184,9 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_new_genre:
-                shouldReloadOnResume=true;
+                shouldReloadOnResume = true;
                 startActivity(new Intent(this, AddNewAuthorActivity.class));
                 return true;
 
@@ -199,12 +199,12 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
     public void onAction(int position, int action) {
 
         Author author = authorList.get(position);
-        Log.d(TAG,"id "+authorList.get(position).getId());
-        switch (action){
+        Log.d(TAG, "id " + authorList.get(position).getId());
+        switch (action) {
             case AuthorAdapter.ACTION_EDIT:
                 shouldReloadOnResume = true;
-                Intent intent = new Intent(AuthorActivity.this,EditAuthorActivity.class);
-                intent.putExtra(AUTHOR_NAME,author.getName());
+                Intent intent = new Intent(AuthorActivity.this, EditAuthorActivity.class);
+                intent.putExtra(AUTHOR_NAME, author.getName());
                 intent.putExtra(AUTHOR_ID, author.getId());
                 intent.putExtra(AUTHOR_LANGUAGE, author.getLanguage());
                 intent.putExtra(AUTHOR_COUNTRY, author.getCountry());
@@ -215,13 +215,13 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                      //  Toast.makeText(AuthorActivity.this, "Sucessfully deleted entry",Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(AuthorActivity.this, "Sucessfully deleted entry",Toast.LENGTH_SHORT).show();
                         loadAuthors();
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e(TAG,t.toString());
+                        Log.e(TAG, t.toString());
                     }
                 });
                 break;
@@ -230,6 +230,7 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
     }
 
     private void showLoading() {
+        adapter.setLoading(true);
         if (mProgressDialog.isShowing())
             return;
         mProgressDialog.setMessage("Loading.......");
@@ -237,6 +238,7 @@ public class AuthorActivity extends AppCompatActivity implements RecyclerEditDel
     }
 
     private void hideLoading() {
+        adapter.setLoading(false);
         if (mProgressDialog.isShowing())
             mProgressDialog.dismiss();
     }

@@ -70,7 +70,12 @@ public class BookDetailsActivity extends AppCompatActivity {
             switch (intent.getAction()){
                 case ACTION_AUTHOR_NAME_API_SUCCESS:
                     author = intent.getParcelableExtra(AUTHOR_KEY_FOR_BROADCASTRECEIVER);
-                    tvAuthoName.setText(author.getName());
+                    if(author != null){
+                        tvAuthoName.setText(author.getName());
+                    }
+                    else {
+                        tvAuthoName.setText("Not found ! ");
+                    }
                     isAuthorLoaded = true;
                     postLoad();
                     break;
@@ -83,7 +88,13 @@ public class BookDetailsActivity extends AppCompatActivity {
 
                 case ACTION_GENRE_TYPE_API_SUCCESS:
                     genre = intent.getParcelableExtra(GENRE_KEY_FOR_BROADCASTRECEIVER);
-                    tvGenreType.setText(genre.getName());
+                    if(genre != null){
+                        tvGenreType.setText(genre.getName());
+                    }
+                    else {
+                        tvGenreType.setText("Not found !");
+                    }
+
                     isGenreLoaded = true;
                     postLoad();
                     break;
@@ -186,22 +197,34 @@ public class BookDetailsActivity extends AppCompatActivity {
         tvFindBookByAuthor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shouldReload = false;
-                Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByAuthorActivity.class);
-                intent.putExtra("authorId", book.getAuthorId());
-                intent.putExtra("authorName", tvAuthoName.getText().toString());
-                startActivity(intent);
+                if(author != null){
+                    shouldReload = false;
+                    Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByAuthorActivity.class);
+                    intent.putExtra("authorId", book.getAuthorId());
+                    intent.putExtra("authorName", tvAuthoName.getText().toString());
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(BookDetailsActivity.this, "Add author name first .", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
         tvFindBookByGenre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                shouldReload = false;
-                Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByGenreActivity.class);
-                intent.putExtra("genreId", genre.getId());
-                intent.putExtra("genreName", tvGenreType.getText().toString());
-                startActivity(intent);
+                if(genre != null){
+                    shouldReload = false;
+                    Intent intent = new Intent(BookDetailsActivity.this, SortedBooksByGenreActivity.class);
+                    intent.putExtra("genreId", genre.getId());
+                    intent.putExtra("genreName", tvGenreType.getText().toString());
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(BookDetailsActivity.this, "Add genre type first .", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
@@ -215,8 +238,18 @@ public class BookDetailsActivity extends AppCompatActivity {
                 intent.putExtra("bookLang", book.getLanguage());
                 intent.putExtra("bookPublishDate", book.getPublished());
                 intent.putExtra("bookPages", String.valueOf(book.getPages()));
-                intent.putExtra("authName", tvAuthoName.getText());
-                intent.putExtra("genreType", tvGenreType.getText());
+                if(author!= null){
+                    intent.putExtra("authName", tvAuthoName.getText());
+                }
+                else {
+                    intent.putExtra("authName", "");
+                }
+                if(genre != null){
+                    intent.putExtra("genreType", tvGenreType.getText());
+                }
+                else {
+                    intent.putExtra("genreType", "");
+                }
                 intent.putExtra("authId", book.getAuthorId());
                 intent.putExtra("genreId", book.getGenreId());
                 startActivity(intent);

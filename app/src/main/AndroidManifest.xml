@@ -32,6 +32,7 @@
         <activity
             android:name=".activity.genre.AddNewGenreActivity"
             android:configChanges="screenSize|orientation"
+            android:screenOrientation="portrait"
             android:label="Add new Genre"
             android:parentActivityName=".activity.genre.GenreActivity">
             <meta-data
@@ -40,15 +41,20 @@
         </activity>
         <activity
             android:name=".activity.genre.EditGenreActivity"
+            android:screenOrientation="portrait"
             android:label="Edit genre" />
         <activity
             android:name=".activity.author.AddNewAuthorActivity"
-            android:label="Add new Author" />
-        <activity android:name=".activity.author.EditAuthorActivity" />
+            android:label="Add new Author"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.author.EditAuthorActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.book.AddNewBookActivity"
-            android:label="Add new book" />
-        <activity android:name=".activity.book.EditBookActivity" />
+            android:label="Add new book"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.book.EditBookActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.book.GenreTypeSelection.Select_genre_type_activity" />
         <activity android:name=".activity.book.AuthorNameSelection.Select_author_name_activity" />
         <activity android:name=".activity.book.BookDetailsActivity" />

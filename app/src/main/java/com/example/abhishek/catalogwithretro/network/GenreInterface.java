@@ -1,6 +1,6 @@
 package com.example.abhishek.catalogwithretro.network;
 
-import com.example.abhishek.catalogwithretro.model.Author;
+
 import com.example.abhishek.catalogwithretro.model.Genre;
 
 import java.util.List;
@@ -13,10 +13,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-
-/**
- * Created by abhishek on 7/11/17.
- */
 
 public interface GenreInterface {
     @GET("/genres")

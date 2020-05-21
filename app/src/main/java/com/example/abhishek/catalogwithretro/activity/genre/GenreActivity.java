@@ -1,15 +1,12 @@
 package com.example.abhishek.catalogwithretro.activity.genre;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GenreActivity extends AppCompatActivity implements RecyclerEditDeleteClickActionListener {
+public class GenreActivity extends Activity implements RecyclerEditDeleteClickActionListener {
 
     private static final String KEY_GENRES = "genres";
     private static final String KEY_SHOULD_RELOAD_ON_RESUME = "shouldLoadOnResume";
